@@ -139,8 +139,10 @@ VPC に沿った初期プロトタイプ(任意):
 
 | 項目 | 回答 |
 |---|---|
-| デプロイURL(Vercel等) | https://self-care-quest.vercel.app/ |
+| デプロイURL(旧アプリ) | https://self-care-quest-before.vercel.app/ |
 | 一言紹介 | 育成ゲーム×体調・服薬・通院予定の記録管理ツール（MVP前の旧アプリ・本提出VPCの参考元） |
+| デプロイURL(新アプリ) | https://selfcare-quest.vercel.app/ |
+| 一言紹介 | Google認証＋Supabase対応・育成ゲーム×体調・服薬・通院管理の進化版（Self Care Quest） |
 
 > 必須ではありません。\
 > **新規に作る** でも、**第1〜2回プロダクトを VPC に沿って進化させる** でもOK。
