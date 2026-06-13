@@ -13,9 +13,65 @@
 - **対応**: `bg-bubble-bg` / `bg-ink/10` / `text-gray-800` に置換
 - **対象ファイル**: `app/pet/page.tsx` / `app/health/page.tsx` / `app/medications/page.tsx` / `app/settings/page.tsx` / `app/login/page.tsx`
 
+### 通院記録クラッシュ修正
+- **原因**: 次回通院日を未入力のまま完了ボタンを押すと `RangeError: Invalid time value` でクラッシュ
+- **対応**: `new Date(nextDate)` の結果が無効な場合はスキップするバリデーションを追加
+
 ---
 
 ## 新機能
+
+### QuestCard UI 改善
+
+完了済みクエストの表示を見直した。
+
+| 変更前 | 変更後 |
+|--------|--------|
+| テキストに取り消し線・透明度70% | 取り消し線・透明度なし |
+| チェックマーク（✓）に差し替え | 元のアイコンをグリーンで表示 |
+| 右端に `›` | 「完了」バッジ（緑の丸ラベル）を表示 |
+
+### Daily Quest 完了ボーナス
+
+体調入力と服薬（薬が登録されている場合）の両方を完了した日に、ボーナスを付与。
+
+- **報酬**: XP +50 / コイン +20
+- ページ再読み込みでの二重付与を `localStorage` で防止（`scq_daily_bonus_${日付}` キー）
+- ホームのバナーにボーナス内容とレベルアップ情報を表示
+
+### コイン獲得履歴
+
+コインの増減をすべて記録・閲覧できるようになった。
+
+**仕組み:**
+- Supabase に `coin_logs` テーブルを新設
+- コインが動くすべての場面で自動記録
+- 設定ページ「コイン履歴」セクションから最新30件を確認可能
+
+**記録されるイベント:**
+
+| イベント | コイン |
+|----------|--------|
+| 体調記録 | +5 |
+| 服薬記録 | +2 |
+| 通院記録 | +10 |
+| Daily Quest完了ボーナス | +20 |
+| おやつ購入 | -10 |
+| ケアルート寛解 | +15 |
+| ケアルート治癒 | +50 |
+
+**追加ヘルパー:**
+- `addXP(userId, xpGain, coinGain, reason?)` — `reason` を渡すとコイン変動を自動で `coin_logs` へ記録
+- `logCoin(userId, amount, reason)` — 直接コイン変動を記録するヘルパー
+
+**Supabase `coin_logs` テーブル:**
+```
+id          bigint (PK, auto increment)
+user_id     uuid (FK → auth.users)
+amount      integer  （正=獲得 / 負=消費）
+reason      text
+created_at  timestamptz (default now())
+```
 
 ### 相棒ページ
 
@@ -62,3 +118,4 @@
 - 種族別なつき度・名前は `localStorage`（`scq_pet_affection_${type}` / `scq_pet_name_${type}`）で管理
 - 解放アナウンス済み種族は `scq_announced_unlocks` に配列保存して重複防止
 - ダークモードは `html` タグへの `.dark-mode` クラス付与で CSS変数を切り替える仕組み
+- コイン履歴の RLS ポリシー: `auth.uid() = user_id`（INSERT / SELECT）
