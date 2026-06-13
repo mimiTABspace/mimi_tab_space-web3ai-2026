@@ -1,6 +1,6 @@
 # バージョンアップ内容 - Self Care Quest v0.2.0
 
-**リポジトリ**: [mimiTABspace/selfcare-quest](https://github.com/mimiTABspace/selfcare-quest)  
+
 **バージョン**: 0.1.0 → 0.2.0  
 **更新日**: 2026-06-09
 
