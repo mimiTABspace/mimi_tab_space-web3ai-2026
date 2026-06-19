@@ -109,6 +109,7 @@
 | UX修正 | ナビバーのカレンダーアイコンがグラフアイコンになっていた問題を修正 |
 | アカウント削除 | Edge Function が新テーブル（coin_logs, user_items 等）を削除できなかった問題を修正 |
 | 入力バグ | 服薬登録フォームで錠剤数・回数の値を消去後に入力すると先頭に0が残る問題を修正 |
+| タイムゾーンバグ | 銀行・ガチャの日付が UTC 基準になっており、JST深夜0〜8時の間に操作すると前日扱いになる問題を修正 |
 
 ---
 
@@ -136,3 +137,4 @@
 - 服薬ページはセクション見出しで `share.nickname || share.member_email` を表示
 - `seededRate(key)`: 決定論的ハッシュで全ユーザー共通利率を生成（Math.randomを使わない）
 - アカウント削除Edge Functionはユーザー自身のJWTでデータ削除し、service_roleはauth削除のみに使用
+- `toJSTDateStr(date)`: `Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Tokyo" })` を使い `YYYY-MM-DD` 形式のJST日付文字列を返すヘルパー。`toISOString()` はUTCを返すため銀行・ガチャの日付判定に使用禁止
